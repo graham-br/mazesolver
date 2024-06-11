@@ -1,5 +1,7 @@
 from graphics import Point, Line
 
+remove_color = "white"
+
 
 class Cell:
     def __init__(self, x1, y1, x2, y2, window=None):
@@ -23,15 +25,22 @@ class Cell:
 
         if self.has_left_wall:
             self.__win.draw_line(Line(top_left, bottom_left))
+        else:
+            self.__win.draw_line(Line(top_left, bottom_left), remove_color)
 
         if self.has_right_wall:
             self.__win.draw_line(Line(top_right, bottom_right))
+        else:
+            self.__win.draw_line(Line(top_right, bottom_right), remove_color)
 
         if self.has_top_wall:
             self.__win.draw_line(Line(top_left, top_right))
-
+        else:
+            self.__win.draw_line(Line(top_left, top_right), remove_color)
         if self.has_bottom_wall:
             self.__win.draw_line(Line(bottom_left, bottom_right))
+        else:
+            self.__win.draw_line(Line(bottom_left, bottom_right), remove_color)
 
     def draw_move(self, to_cell, undo=False):
         line_color = "red"
