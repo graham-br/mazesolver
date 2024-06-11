@@ -2,7 +2,7 @@ from graphics import Point, Line
 
 
 class Cell:
-    def __init__(self, x1, y1, x2, y2, window):
+    def __init__(self, x1, y1, x2, y2, window=None):
         self.__x1 = x1
         self.__y1 = y1
         self.__x2 = x2
@@ -14,6 +14,8 @@ class Cell:
         self.has_bottom_wall = True
 
     def draw(self):
+        if self.__win is None:
+            return
         top_left = Point(self.__x1, self.__y1)
         top_right = Point(self.__x2, self.__y1)
         bottom_left = Point(self.__x1, self.__y2)
