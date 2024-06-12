@@ -28,6 +28,7 @@ class Maze:
 
         self.__create_cells()
         self.__break_entrance_and_exit()
+        self.__break_walls_r(0, 0)
 
     def __create_cells(self):
         for col in range(self.__num_cols):
@@ -66,3 +67,52 @@ class Maze:
         else:
             self._cells[self.__num_cols - 1][self.__num_rows - 1].has_top_wall = False
         self.__draw_cell(self.__num_cols - 1, self.__num_rows - 1)
+
+    def __break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+        while True:
+            need_to_visit = []
+            # Figure out which adjacent cells need visiting still
+            # Check left
+            if i != 0 and not self._cells[i - 1][j].visited:
+                need_to_visit.append((i - 1, j))
+            # Check right
+            if i < self.__num_cols - 1 and not self._cells[i + 1][j].visited:
+                need_to_visit.append((i + 1, j))
+            # Check above
+            if j != 0 and not self._cells[i][j - 1].visited:
+                need_to_visit.append((i, j - 1))
+            # Check below
+            if j < self.__num_rows - 1 and not self._cells[i][j + 1].visited:
+                need_to_visit.append((i, j + 1))
+            # if no cells to visit, draw current cell and break out
+            if len(need_to_visit) == 0:
+                self.__draw_cell(i, j)
+                return
+            # randomly choose the next cell to visit
+            rand_choice = random.randint(0, len(need_to_visit) - 1)
+            cell_coords = need_to_visit[rand_choice]
+            x = cell_coords[0]
+            y = cell_coords[1]
+
+            # Break walls between the two cells
+            if i == x:
+                if j < y:
+                    # down
+                    self._cells[i][j].has_bottom_wall = False
+                    self._cells[x][y].has_top_wall = False
+                else:
+                    # up
+                    self._cells[i][j].has_top_wall = False
+                    self._cells[x][y].has_bottom_wall = False
+            else:
+                if i < x:
+                    # right
+                    self._cells[i][j].has_right_wall = False
+                    self._cells[x][y].has_left_wall = False
+                else:
+                    # left
+                    self._cells[i][j].has_left_wall = False
+                    self._cells[x][y].has_right_wall = False
+            # call recursive break walls on next cell
+            self.__break_walls_r(x, y)
